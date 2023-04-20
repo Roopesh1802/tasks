@@ -2,7 +2,7 @@
 
 resource "google_compute_network" "vpc_network" {
  project = "es-devops-sb"
- name = "vpc-network-1"
+ name = "vpc-network-jenkins"
  auto_create_subnetworks = false
  mtu = 1460
 
@@ -73,9 +73,6 @@ resource "google_compute_instance_template" "instance_test" {
 
  }
 
-
-
-
  network_interface {
 
   network = "vpc-network-1"
@@ -89,39 +86,4 @@ resource "google_compute_instance_template" "instance_test" {
 
 }
 
-}
-resource "google_compute_instance_group_manager" "test_group" {
-  provider = google
-
-  name = var.instance-group
-  zone = var.zone
-
-  version {
-    instance_template = google_compute_instance_template.instance_test.id
-    name              = "primary"
-  }
-
-  target_pools       = [google_compute_target_pool.test_targetpool.id]
-  base_instance_name = var.instance-name
-  auto_healing_policies {
-    initial_delay_sec = 10
-    health_check = google_compute_health_check.http-health-check.id
-  }
-}
-
-resource "google_compute_target_pool" "test_targetpool" {
-  name = var.target-pool
-}
-
-resource "google_compute_health_check" "http-health-check" {
-  name = var.health-check
-
-  timeout_sec        = 10
-  check_interval_sec = 10
-  healthy_threshold = 2
-  unhealthy_threshold = 2
-
-  http_health_check {
-    port = 80
-  }
 }
