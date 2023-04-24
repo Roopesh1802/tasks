@@ -75,7 +75,7 @@ resource "google_compute_instance_template" "instance_test" {
 
  network_interface {
 
-  network = "vpc-network-1"
+  network = "vpc-network-jenkins"
 
   subnetwork = "subnet-3"
  # secret default
